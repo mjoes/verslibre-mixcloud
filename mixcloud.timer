@@ -1,0 +1,9 @@
+[Unit]
+Description=Mixcloud timing
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=1h
+
+[Install]
+WantedBy=timers.target
