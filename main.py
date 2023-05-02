@@ -18,9 +18,15 @@ SHEET_ID="1j2w0MPDL0R9Z_9XE5G_luDo4PgPEWhf6RNhwbxh7lmw"
 SHEET_NAME="meta"
 filepath_json = f'./credentials.json'
 local_base_path = '/Users/mortenslingsby/Music/VersLibre/code/verslibre-mixcloud/'
+folderid_profiles = "1t7JgNd4U1oQEYw4NTdHPUFAIxd9YJWq3"
 
 logger.info("Starting audio processing")
 
+def download_picture(file_id, file_name):
+    file = drive.CreateFile({'id': file_id})
+    local_picture_path = f"{local_base_path}/picture/{file_name}"
+    file.GetContentFile(local_picture_path, chunksize=1004857600)
+    return local_picture_path
 def trim_sound(file_name,filepath,tmp_path):  
     trim_file_name=file_name.split('.',2)[0]
     new_name = f"{trim_file_name}-mx.mp3"
@@ -106,6 +112,7 @@ local_upload=f'{local_base_path}/upload/'
 local_profiles=f"{local_base_path}/Profiles/"
 file_list=[f for f in os.listdir(local_temp) if not f.startswith('.')]
 upload_file_list=[f for f in os.listdir(local_upload) if not f.startswith('.')]
+file_list_profiles = drive.ListFile({'q': f"parents = '{folderid_profiles}'"}).GetList()
 
 if len(file_list) == 0:
     logger.info(f"No files to trim")
@@ -122,6 +129,10 @@ for file_name in upload_file_list:
     df_active=df[df["tag"]==tag]
     picpath=df_active["picture"].iloc[0]
 
+    for file in file_list_profiles:
+        if file['title'] == picpath:
+            local_picpath = download_picture(file["id"],file['title'])
+
     date_rec = datetime.strptime(file_name.split(' ',2)[0], '%Y%m%d')
     month = date_rec.month
     year = date_rec.year
@@ -136,7 +147,7 @@ for file_name in upload_file_list:
 
     file = {
         "mp3":open(src_path,'rb'),
-        "picture":open(f"{local_base_path}/Profiles/{picpath}",'rb')
+        "picture":open(local_picpath,'rb')
     }
 
     url = "https://api.mixcloud.com/upload/?access_token=XXXXX"
@@ -161,6 +172,7 @@ for file_name in upload_file_list:
         worksheet.update([df.columns.values.tolist()] + df.values.tolist())
 
         os.remove(src_path)
+        os.remove(local_picpath)
         logger.info(f"Removed local files for: {file_name}")
 
     except:
