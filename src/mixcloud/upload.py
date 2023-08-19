@@ -6,7 +6,7 @@ import os
 from loguru import logger
 from datetime import datetime, timedelta
 
-from mixcloud.utils import download_picture, get_publish, get_name
+from mixcloud.utils import download_picture, get_publish, get_name, get_filename
 from mixcloud.config import local_upload, dest_dir, drive, filepath_json
 from mixcloud.metadata import metadata
 
@@ -33,6 +33,7 @@ def upload(upload_file_list, file_list_profiles):
         date_rec = datetime.strptime(file_name.split(' ',2)[0], '%Y%m%d')
         month = date_rec.month
         year = date_rec.year
+        day = date_rec.day
 
         publish_date = get_publish(date_rec)
         name, show_name = get_name(df_active, tag)
@@ -69,11 +70,12 @@ def upload(upload_file_list, file_list_profiles):
                 logger.info("RateLimit Exception, break program")
             break
         try:
+            filename_archive = get_filename(df_active, year, month, day)
             metadata = {
                 'parents': [
                     {"id": dest_dir}
                 ],
-                'title': file_name,
+                'title': filename_archive,
                 'mimeType': 'audio/mpeg'
             }
             file_new = drive.CreateFile(metadata)
