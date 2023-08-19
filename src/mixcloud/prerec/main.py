@@ -16,6 +16,7 @@ dest_art = "1ffVnNHXgFiqNVaeF3dJ0SyQnVcLuHcIr"
 local_pre = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/pre/"
 local_post = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/post/"
 local_art = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/art/"
+dest_macmini = "1CpEBqE49dEBmsJCsyrRa0M6u1EwpJF2t"
 
 def login_with_service_account():
     """
@@ -113,6 +114,7 @@ else:
         new_filename = f"{time}_{file_name}"
         new_path = convert(file_name, local_post,local_pre)
         upload_prec(new_path, dest_gd,file_name)
+        upload_prec(new_path, dest_macmini,file_name)
         os.remove(new_path)
         logger.info(f"Finished converting sound for {new_filename}")
 
