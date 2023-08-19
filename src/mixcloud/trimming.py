@@ -16,7 +16,6 @@ def trim_sound(file_name,filepath,tmp_path):
     new_path = f"{filepath}{new_name}"
     file_path = f"{tmp_path}{file_name}"
     try:
-        AudioSegment.ffmpeg = path_to_ffmpeg()
         trim_leading_silence: AudioSegment = lambda x: x[detect_leading_silence(x) :]
         trim_trailing_silence: AudioSegment = lambda x: trim_leading_silence(x.reverse()).reverse()
         strip_silence: AudioSegment = lambda x: trim_trailing_silence(trim_leading_silence(x))
@@ -24,8 +23,9 @@ def trim_sound(file_name,filepath,tmp_path):
         stripped = strip_silence(sound)
         out = stripped.fade_in(3000).fade_out(3000)
         out.export(new_path, format="mp3", bitrate="320k")
-    except:
+    except Exception as e:
         logger.info(f"FAILED: Trim and fade in/out for: {file_name}")
+        logger.error(e)
         shutil.copyfile(file_path, new_path)
     else:
         logger.info(f"PASSED: Trim and fade in/out for: {file_name}")
