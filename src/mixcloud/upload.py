@@ -6,9 +6,9 @@ import os
 from loguru import logger
 from datetime import datetime, timedelta
 
-from mixcloud.utils import download_picture, get_publish, get_name, get_filename
+from mixcloud.utils import download_picture, get_publish, get_name, get_filename, get_metadata
 from mixcloud.config import local_upload, dest_dir, drive, filepath_json
-from mixcloud.metadata import metadata
+from mixcloud.metadata import add_metadata_to_mp3
 
 API_KEY = os.getenv('API_KEY')
 SHEET_ID="1j2w0MPDL0R9Z_9XE5G_luDo4PgPEWhf6RNhwbxh7lmw"
@@ -43,10 +43,6 @@ def upload(upload_file_list, file_list_profiles):
         payload.update({'name':f"{name}",'publish_date':f'{publish_date}','disable_comments':True,'hide_stats':True})
         
         src_path = f"{local_upload}{file_name}"
-    #   src_path = f"{local_upload}{file_name.split('-',2)[0]}-{tag}-{df_active['show_name'].iloc[0]}-{df_active['dj_name'].iloc[0]}-{df_active['show_nr'].iloc[0]}.mp3"
-    #  os.rename(org_path, src_path)
-
-    #    metadata(src_path, df_active["show_name"].iloc[0], df_active["dj_name"].iloc[0], df_active["tags-0-tag"].iloc[0], df_active["show_nr"].iloc[0], year)
 
         try:
             file = {
@@ -69,7 +65,10 @@ def upload(upload_file_list, file_list_profiles):
                 logger.info("RateLimit Exception, break program")
             break
         try:
-            filename_archive = get_filename(df_active, year, month, day)
+            show_name, dj_name, ep_nr, genre = get_metadata(df_active)
+            filename_archive = get_filename(show_name, dj_name, ep_nr, year, month, day)
+            add_metadata_to_mp3(src_path, show_name, dj_name, ep_nr, genre, year)
+
             metadata = {
                 'parents': [
                     {"id": dest_dir}

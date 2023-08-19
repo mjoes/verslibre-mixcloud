@@ -20,6 +20,7 @@ loguru = "^0.7.0"
 ffmpeg = "^1.4"
 music-tag = "^0.4.3"
 pillow = "^10.0.0"
+eyed3 = "^0.9.7"
 
 [tool.poetry.scripts]
 mixing = "mixcloud.main_pkg:run"
