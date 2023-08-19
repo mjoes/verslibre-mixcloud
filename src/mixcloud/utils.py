@@ -11,7 +11,7 @@ def download_picture(file_id, file_name):
 def get_publish(date_rec):
     exp_date = date_rec + timedelta(days=1)
     if exp_date < datetime.today():
-        publish_date=(datetime.today()).strftime("%Y-%m-%dT10:00:00Z")
+        publish_date=(datetime.today()+timedelta(1)).strftime("%Y-%m-%dT10:00:00Z")
     else:
         publish_date=exp_date.strftime("%Y-%m-%dT10:00:00Z")
     return publish_date
@@ -47,6 +47,6 @@ def get_metadata(metadata_df):
     genre=show_data['tags-0-tag']
     return show_name, dj_name, ep_nr, genre
 
-def get_filename(show_name, dj_name, ep_nr, year, month, day):
-    filename=f"{year}{month:02}{day:02}_{show_name}_{ep_nr}_{dj_name}"
-    return filename.replace(" ", "_")
+def get_filename(tag, show_name, dj_name, ep_nr, date):
+    filename=f"{date}_{tag}_{show_name}_{ep_nr}_{dj_name}"
+    return filename.replace(" ", "_").replace("/", "")

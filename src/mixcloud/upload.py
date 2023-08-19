@@ -6,23 +6,16 @@ import os
 from loguru import logger
 from datetime import datetime, timedelta
 
-from mixcloud.utils import download_picture, get_publish, get_name, get_filename, get_metadata
+from mixcloud.utils import download_picture, get_publish, get_name, get_metadata
 from mixcloud.config import local_upload, dest_dir, drive, filepath_json
 from mixcloud.metadata import add_metadata_to_mp3
 
 API_KEY = os.getenv('API_KEY')
-SHEET_ID="1j2w0MPDL0R9Z_9XE5G_luDo4PgPEWhf6RNhwbxh7lmw"
-SHEET_NAME="meta"                                                                                                                                  
-gc = gspread.service_account(filename=filepath_json)
-spreadsheet = gc.open_by_key(SHEET_ID)
-worksheet = spreadsheet.worksheet(SHEET_NAME)
-rows = worksheet.get_all_records()
-df = pd.DataFrame.from_dict(rows)
 
-def upload(upload_file_list, file_list_profiles):
+def upload(df, worksheet, upload_file_list, file_list_profiles):
     for file_name in upload_file_list:
         logger.info(f"Starting uploading stage for {file_name}")
-        tag = file_name.split('-',2)[1]
+        tag = file_name.split('_',2)[1]
         df_active=df[df["tag"]==tag]
         picpath=df_active["picture"].iloc[0]
         for file in file_list_profiles:
@@ -30,10 +23,8 @@ def upload(upload_file_list, file_list_profiles):
                 local_picpath = download_picture(file["id"],file['title'])
         
 
-        date_rec = datetime.strptime(file_name.split(' ',2)[0], '%Y%m%d')
-        month = date_rec.month
+        date_rec = datetime.strptime(file_name.split('_',2)[0], '%Y%m%d')
         year = date_rec.year
-        day = date_rec.day
 
         publish_date = get_publish(date_rec)
         name, show_name = get_name(df_active, tag)
@@ -60,20 +51,20 @@ def upload(upload_file_list, file_list_profiles):
             logger.info(f"Upload to Mixcloud {file_name} PASSED")
         except Exception as error:
             logger.error(f"Upload to Mixcloud {file_name} failed: {error}")
+            logger.error(response.text)
 
             if 'RateLimitException' in response.text:
                 logger.info("RateLimit Exception, break program")
             break
         try:
             show_name, dj_name, ep_nr, genre = get_metadata(df_active)
-            filename_archive = get_filename(show_name, dj_name, ep_nr, year, month, day)
             add_metadata_to_mp3(src_path, show_name, dj_name, ep_nr, genre, year)
-
+            filename=os.path.basename(src_path)
             metadata = {
                 'parents': [
                     {"id": dest_dir}
                 ],
-                'title': filename_archive,
+                'title': src_path,
                 'mimeType': 'audio/mpeg'
             }
             file_new = drive.CreateFile(metadata)

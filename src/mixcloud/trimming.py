@@ -1,18 +1,19 @@
 import shutil
 import os
+import pandas as pd
 
 from loguru import logger
 from pydub import AudioSegment
 from pydub.silence import detect_leading_silence
-
+from datetime import datetime
 from mixcloud.config import folderid_profiles,local_temp, local_base_path, local_upload, drive
+from mixcloud.utils import get_metadata, get_filename
 
 from pathlib import Path
 from pydub import AudioSegment
 
-def trim_sound(file_name,filepath,tmp_path):  
-    trim_file_name=file_name.split('.',2)[0]
-    new_name = f"{trim_file_name}-mx.mp3"
+def trim_sound(file_name,filepath,tmp_path, filename_archive):  
+    new_name = f"{filename_archive}.mp3"
     new_path = f"{filepath}{new_name}"
     file_path = f"{tmp_path}{file_name}"
     try:
@@ -33,8 +34,7 @@ def trim_sound(file_name,filepath,tmp_path):
     os.remove(f'{local_base_path}/tmp/{file_name}')
     return new_path
 
-def trimming():
-
+def trimming(df):
     file_list=[f for f in os.listdir(local_temp) if not f.startswith('.')]
     upload_file_list=[f for f in os.listdir(local_upload) if not f.startswith('.')]
     file_list_profiles = drive.ListFile({'q': f"parents = '{folderid_profiles}'"}).GetList()
@@ -44,7 +44,14 @@ def trimming():
     else:
         for file_name in file_list:
             logger.info(f"Starting trimming sound for {file_name}")
-            trim_sound(file_name, local_upload,local_temp)
+
+            tag = file_name.split('-',2)[1]
+            date = file_name.split(' ',2)[0]
+
+            df_active=df[df["tag"]==tag]
+            filename_archive = get_filename(tag, show_name, dj_name, ep_nr, date)
+
+            trim_sound(file_name, local_upload,local_temp, filename_archive)
 
     logger.info(f"Finished trimming stage")
     return file_list_profiles
