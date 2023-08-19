@@ -1,0 +1,5 @@
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+  
+0 4 * * * /usr/local/bin/python3 /Users/radioproducer/Documents/verslibre-mixcloud/src/mixcloud/main.py >> /Users/radioproducer/Documents/verslibre-mixcloud/logfile.txt 2>&1
+*/15 * * * * /usr/local/bin/python3 /Users/radioproducer/Documents/verslibre-mixcloud/src/mixcloud/prerec/main.py >> /Users/radioproducer/Documents/verslibre-mixcloud/logfile_prec.txt 2>&1
+0 * * * * /usr/local/bin/python3 /Users/radioproducer/Documents/verslibre-mixcloud/move.py >> /Users/radioproducer/Documents/verslibre-mixcloud/move_log.txt 2>&1

@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "mixing"
+version = "0.1.1"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "mixcloud", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.31.0"
+mutagen = "^1.46.0"
+pandas = "^2.0.2"
+numpy = "^1.24.3"
+pathlib = "^1.0.1"
+pydub = "^0.25.1"
+gspread = "^5.9.0"
+PyDrive2 = "^1.15.4"
+loguru = "^0.7.0"
+ffmpeg = "^1.4"
+music-tag = "^0.4.3"
+pillow = "^10.0.0"
+
+[tool.poetry.scripts]
+mixing = "mixcloud.main_pkg:run"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

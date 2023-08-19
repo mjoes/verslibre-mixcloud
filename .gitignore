@@ -1,0 +1,9 @@
+credentials.json
+logfile*
+move_log.txt
+env.sh
+tmp/
+upload/
+packages/
+picture/
+/prerec/
