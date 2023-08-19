@@ -63,8 +63,7 @@ def upload(upload_file_list, file_list_profiles):
             response.raise_for_status()
             logger.info(f"Upload to Mixcloud {file_name} PASSED")
         except Exception as error:
-            logger.info(f"Upload to Mixcloud {file_name} failed: {error}")
-            print(response.raise_for_status())
+            logger.error(f"Upload to Mixcloud {file_name} failed: {error}")
 
             if 'RateLimitException' in response.text:
                 logger.info("RateLimit Exception, break program")
