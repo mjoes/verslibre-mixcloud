@@ -64,7 +64,7 @@ def upload(df, worksheet, upload_file_list, file_list_profiles):
                 'parents': [
                     {"id": dest_dir}
                 ],
-                'title': src_path,
+                'title': filename,
                 'mimeType': 'audio/mpeg'
             }
             file_new = drive.CreateFile(metadata)
