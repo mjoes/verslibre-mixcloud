@@ -49,6 +49,7 @@ def trimming(df):
             date = file_name.split(' ',2)[0]
 
             df_active=df[df["tag"]==tag]
+            show_name, dj_name, ep_nr, genre = get_metadata(df_active)
             filename_archive = get_filename(tag, show_name, dj_name, ep_nr, date)
 
             trim_sound(file_name, local_upload,local_temp, filename_archive)
