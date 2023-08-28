@@ -4,6 +4,8 @@ from pydrive2.drive import GoogleDrive
 from pydrive2.files import GoogleDriveFile
 from pydub import AudioSegment
 import os
+import requests
+import json
 from loguru import logger
 from datetime import datetime
 
@@ -17,6 +19,9 @@ local_pre = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/pre/"
 local_post = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/post/"
 local_art = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/art/"
 dest_macmini = "1CpEBqE49dEBmsJCsyrRa0M6u1EwpJF2t"
+
+# Slack
+WEBHOOK = os.getenv('WEBHOOK')
 
 def login_with_service_account():
     """
@@ -93,6 +98,11 @@ def convert(file_name,new_path,old_path):
     os.remove(old_path)
     return new_path
 
+def send_slack_message(webhook: str):
+    """Send a Slack message to a channel via a webhook. """
+    payload = {"text": f"{new_path} has been uploaded to https://drive.google.com/drive/u/1/folders/1CpEBqE49dEBmsJCsyrRa0M6u1EwpJF2t"}
+    return requests.post(webhook, json.dumps(payload))
+
 def upload_prec(src_path, dest_dir,file_name,type_mime='audio/mpeg'):
     metadata = {
         'parents': [
@@ -104,6 +114,7 @@ def upload_prec(src_path, dest_dir,file_name,type_mime='audio/mpeg'):
     file_new = drive.CreateFile(metadata)
     file_new.SetContentFile(src_path)
     file_new.Upload()
+    send_slack_message(WEBHOOK)
 
 file_list=[f for f in os.listdir(local_pre) if not f.startswith('.')]
 if len(file_list) == 0:
@@ -141,3 +152,4 @@ else:
         upload_prec(path_art_new,dest_art,new_file_name,"image/png")
         os.remove(path_art)
         os.remove(path_art_new)
+
