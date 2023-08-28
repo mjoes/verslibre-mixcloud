@@ -9,10 +9,10 @@ from datetime import datetime
 
 prerec_folder_id="181p00FNHEIsA6ozM_2iXhcBd9poeKBwOrD4KpgPW4MJ1FkBV7OBrs0aopibAiQDqLxNM2E3X"
 filepath_json = f'/Users/radioproducer/Documents/verslibre-mixcloud/credentials.json'
-dest_gd = "1XpVaubrDtdSaINGbzMbf7wrMMc_WrZu5"
+dest_gd = "1d8ifEDS0Av6llRPMfsTHjJ-SVKAXk15U"
 delete_folder = "1WTTiocd8C5WUaYP4wTEMEshn-oKBxuRT"
 origin_art = "1TEqe9SexwPpr8sVN9lzoZvozAYZGycRT0v4y9MRGD-fzvjrWB5qE7VesyBl8EdMCUtNj9SHc"
-dest_art = "1ffVnNHXgFiqNVaeF3dJ0SyQnVcLuHcIr"
+dest_art = "1Nsumh-c7cPNEXJrP6UVLvBbwPq7qyFNq"
 local_pre = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/pre/"
 local_post = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/post/"
 local_art = "/Users/radioproducer/Documents/verslibre-mixcloud/prerec/art/"
