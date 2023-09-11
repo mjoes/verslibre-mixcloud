@@ -16,14 +16,15 @@ def get_publish(date_rec):
         publish_date=exp_date.strftime("%Y-%m-%dT10:00:00Z")
     return publish_date
 
-def get_name(df_active, tag):
+def get_name(df_active, tag, date_rec):
     show_name = df_active['show_name'].iloc[0]
     dj_name = df_active['dj_name'].iloc[0]
+    date_str = date_rec.strftime("%d.%m.%Y")
 
     if dj_name != "":
-        name=f"{show_name} #{int(df_active['show_nr'].iloc[0])} - w/ {dj_name}"
+        name=f"{show_name} with {dj_name} ({date_str})"
     else:
-        name=f"{show_name} #{int(df_active['show_nr'].iloc[0])}"
+        name=f"{show_name} ({date_str})"
     return name, show_name
 
 def move(file_id, new_parent):

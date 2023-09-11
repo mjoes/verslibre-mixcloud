@@ -24,10 +24,10 @@ def upload(df, worksheet, upload_file_list, file_list_profiles):
         
 
         date_rec = datetime.strptime(file_name.split('_',2)[0], '%Y%m%d')
-        year = date_rec.year
+        year = date_rec.year 
 
         publish_date = get_publish(date_rec)
-        name, show_name = get_name(df_active, tag)
+        name, show_name = get_name(df_active, tag, date_rec)
 
         data=df_active[['description','tags-0-tag','tags-1-tag','tags-2-tag','tags-3-tag','tags-4-tag']].dropna(axis=1, how='all').to_dict('records')
         payload=data[0]
