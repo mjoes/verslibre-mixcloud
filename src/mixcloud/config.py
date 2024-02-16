@@ -7,7 +7,7 @@ folderid_profiles = "1t7JgNd4U1oQEYw4NTdHPUFAIxd9YJWq3"
 local_temp=f"{local_base_path}/tmp/"
 local_upload=f'{local_base_path}/upload/'
 local_profiles=f"{local_base_path}/Profiles/"
-dest_dir="1-W9mP7aMI3u1A2fwXkrdblsjupk6PFeb"
+dest_dir="1qklZQWVpNRYJWLd0-0zBhxZLyWCHrtpe"
 
 def login_with_service_account():
     """
